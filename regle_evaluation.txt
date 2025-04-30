@@ -1,0 +1,32 @@
+Le score est évalué selon quatre critères, chacun contribuant à une note sur 100 points.
+
+
+1️⃣ Présence des formes (25 points)
+
+    Chaque forme du modèle doit être présente dans la reproduction.
+
+    Ajouter ou oublier une forme entraîne une pénalité.
+
+2️⃣ Type des formes (25 points)
+
+    Les formes doivent être du même type que celles du modèle (cercle, rectangle, triangle…).
+
+    Une forme mal reproduite (ex: un carré au lieu d’un cercle) entraîne une pénalité.
+
+3️⃣ Position des formes (25 points - pénalité exponentielle)
+
+    Plus une forme est proche de sa position initiale, plus elle rapporte de points.
+
+    Une petite erreur de placement est légèrement pénalisée, mais une grande erreur l’est fortement.
+
+4️⃣ Taille des formes (25 points - pénalité exponentielle)
+
+    La taille des formes doit correspondre au modèle.
+
+    Une légère différence est peu pénalisée, mais une grande variation entraîne une forte pénalité.
+
+🎯 Score Final
+
+    Somme des 4 notes sur 25 points
+
+    Une reproduction parfaite donne 100/100, une feuille blanche 0/100.

@@ -1,0 +1,220 @@
+\documentclass[11pt]{article}
+\usepackage[hidelinks]{hyperref}
+\usepackage{amsmath,amssymb,tikz}
+\usetikzlibrary{cd}
+\usepackage{cite}
+\usepackage{graphicx}
+
+\title{Patrons de conception et interactions humain-machine}
+\author{Alexis Teurterie \and Théo Genestier \and Gaël Peschet}
+\interfootnotelinepenalty=10000
+\date{}
+\begin{document}
+\maketitle
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.5\textwidth]{Images/unicaen.png}
+\end{figure}
+\thispagestyle{empty}
+\setcounter{page}{0}
+\newpage
+\tableofcontents
+\newpage
+\section{Introduction au projet}
+Afin de conclure le programme de "Patrons de conception et interactions humain-machine", nous avons eu pour projet de créer un jeu de mémorisation de formes.
+\newline
+Ce devoir de Contrôle Continu était à réaliser en groupe de 3 étudiants. Une partie du temps de travail des derniers TPs y était consacrée mais le travail hors de ces heures était necéssaire.
+\newline
+Le but de ce projet était, évidemment, de faire un jeu mais avec certaines conditions : 
+\medskip
+\newline
+Il devait être facile à comprendre, facile à maintenir et à faire évoluer et robuste ainsi que axé autour des design patterns. De plus, il devait également être testé.
+\medskip
+\newline
+Nous souhaitons une réalisation intégralement MVC, avec un modèle totalement indépendant de l'interface graphique. En particulier, le jeu devra être jouable en ligne de
+commande (par affichage sous forme de System.out.println(...)).
+\newline
+La partie interface ne constituera donc, comme toujours en MVC, qu'une partie Vue-Contrôleur supplémentaire venant se greffer sur le modèle.
+\newpage
+
+\section{Patterns de conception utilisés}
+
+Ce projet met en œuvre plusieurs \textbf{design patterns} classiques, chacun servant un objectif précis en lien avec la structuration, la modularité ou l'évolutivité de l'application.
+
+\subsection*{Résumé des patterns utilisés}
+
+\begin{center}
+\begin{tabular}{|l|p{4cm}|p{7cm}|}
+\hline
+\textbf{Pattern} & \textbf{Composant associé} & \textbf{Rôle} \\
+\hline
+Chain of Responsibility & CasterLink & Crée la vue associée à une forme, en passant la requête entre différents "casters". \\
+\hline
+Template & CasterLink & Encadre le processus de conversion d’un objet vers sa représentation visuelle. \\
+\hline
+Prototype & MFShape & Permet le clonage des formes pour en créer des copies indépendantes. \\
+\hline
+Look \& Feel / Factory & Boutons, labels & Permet de générer différents styles pour l’interface utilisateur via des fabriques spécialisées. \\
+\hline
+Stratégie & Evaluation & Fournit différentes manières d’évaluer les différences entre deux conteneurs, normalisées entre 0 et 100. \\
+\hline
+MVC & Vue / Modèle & Gère l’interface graphique en séparant clairement les rôles du modèle, de la vue et du contrôleur. \\
+\hline
+Observateur & Listeners & Met à jour dynamiquement les vues en fonction des changements dans les conteneurs de formes. \\
+\hline
+Command & Actions sur formes & Encapsule les actions sur les formes (modification, annulation, etc.). \\
+\hline
+State & Modes de l'application & Gère les modes de l’éditeur (Création, Mouvement, Suppression, Redimensionnement). \\
+\hline
+\end{tabular}
+\end{center}
+
+\vspace{1cm}
+
+\subsection{Détails des patterns}
+
+\subsubsection{Chain of Responsibility — \textit{CasterLink}}
+Ce pattern permet à plusieurs objets de traiter une requête sans que le client sache lequel la prendra en charge. Ici, les objets de type \texttt{CasterLink} sont chaînés pour convertir une forme abstraite en sa représentation graphique. Cela rend le système extensible et souple.
+
+\subsubsection{Template — \textit{CasterLink}}
+Le pattern Template permet de définir le squelette d'un algorithme dans une classe abstraite, tout en laissant certaines étapes à des sous-classes. C’est exactement ce que fait \texttt{CasterLink}, en proposant une structure commune à tous les convertisseurs de formes.
+
+\subsubsection{Prototype — \textit{MFShape}}
+Utilisé pour cloner des formes, ce pattern permet de dupliquer des objets complexes sans dépendre de leur classe concrète. \texttt{MFShape} implémente une méthode de clonage conforme à ce modèle.
+
+\subsubsection{Look\&Feel / Factory}
+Pour assurer une cohérence visuelle tout en permettant la personnalisation, les boutons et labels sont créés à l’aide de fabriques. Ces dernières génèrent les éléments en fonction d’un style choisi (moderne, classique, etc.).
+
+\subsubsection{Stratégie — \textit{Evaluation}}
+Différentes stratégies d’évaluation des différences entre conteneurs sont encapsulées dans des objets \texttt{Evaluation}. On peut facilement remplacer ou étendre le système avec de nouveaux critères sans modifier le code existant.
+
+\subsubsection{MVC}
+L'architecture suit le pattern MVC, où le \textbf{modèle} représente les formes et leurs propriétés, la \textbf{vue} affiche leur représentation, et le \textbf{contrôleur} gère les interactions utilisateur. Ce découplage améliore la maintenabilité.
+
+\subsubsection{Observateur — \textit{Listeners}}
+Les composants graphiques sont informés en temps réel des modifications via des listeners. Certains sont spécifiques aux conteneurs de formes, permettant des interactions fines (comme la mise à jour des liaisons).
+
+\subsubsection{Command}
+Chaque action utilisateur (ajout, suppression, modification de forme) est encapsulée dans un objet Commande. Cela rend possible la gestion d’un historique pour l’annulation/refaire des actions.
+
+\subsubsection{State}
+L’éditeur change de comportement selon le mode actif (création, déplacement, suppression, redimensionnement), en suivant le pattern State. Chaque état implémente un comportement distinct pour gérer les événements.
+
+
+\newpage
+\section{Developpement du projet}
+Le code du projet se divise en plusieurs dossiers : 
+
+\begin{itemize}
+    \item "main"
+    \item "test"
+\end{itemize}
+Le dossier "tests" contient des tests unitaires permettant la verification du bon fonctionnement des formes et de leur container
+Le dossier "main" est le plus complet et est lui-même réduit en plusieurs sous-dossiers :
+\begin{itemize}
+    \item "main"
+    \item "model"
+    \item "view"
+\end{itemize}
+Dans le dossier "main", on retrouve un fichier pour obtenir le resultat de l'execution de plusieurs tests ainsi qu'un fichier pour obtenir une vue avec des formes déjà placées et modifiées
+\begin{figure}[h]
+    \centering
+    \includegraphics*[width=1\textwidth]{Images/viewMain.png}
+\end{figure}
+
+Le dossier "model" comporte 5 sous-dossiers : 
+\begin{itemize}
+    \item "command"
+    \item "observer\_pattern"
+    \item "shape"
+    \item "strategy"
+    \item "utils"
+\end{itemize}
+
+\newpage
+"command" est le dossier pour les fichiers qui correspondent aux instructions qui sont en lien aux formes : les ajouter, les bouger, les enlever, les redimensionner.
+\begin{figure}[h]
+    \centering
+    \includegraphics*[width=1.3\textwidth]{Images/command.png}
+\end{figure}
+
+"observer\_pattern" contient les fichiers pour faire fonctionner les écouteurs:
+
+Une classe abstraite qui appelle les méthodes de ces 2 interfaces en initialisant une liste de Modele Ecoutable.
+Une interface pour mettre à jour le modele.
+Une interface pour ajouter et retirer les "Listener".
+
+\begin{figure}[h]
+    \centering
+    \includegraphics*[width=1\textwidth]{Images/Ecouteurs.png}
+\end{figure}
+
+Ainsi qu'un dossier qui contient des fichiers pour faire la même chose mais au niveau des containers
+
+\newpage
+"shape" a tous les fichiers qui representent les formes (cercle, rectangle et polygones)
+\begin{figure}[h]
+    \centering
+    \includegraphics*[width=1\textwidth]{Images/shape.png}
+\end{figure}
+
+
+"strategy" contient toutes les strategies d'évaluation que nous avons developées
+\begin{figure}[h]
+    \centering
+    \includegraphics*[width=1\textwidth]{Images/strategy.png}
+\end{figure}
+
+\newpage
+"utils" n'a qu'un fichier, 'GeoTools', pour faire du raycasting et obtenir le vertex d'un polygone
+
+\begin{figure}[h]
+    \centering
+    \includegraphics*[width=1\textwidth]{Images/geotools.png}
+\end{figure}
+
+Il reste enfin le dossier "view" qui represente graphiquement les action effectuées : 
+
+Les quelques fichiers present dans ce dossier permettent de configurer la vue, d'où le nom DrawingGUI et d'adapter le code à une version graphique.
+\begin{figure}[h]
+    \centering
+    \includegraphics*[width=1\textwidth]{Images/view.png}
+\end{figure}
+
+\newpage
+Plusieurs dossiers sont présents : 
+
+"action\_listener" pour gérer l'annulation et la reproduction d'une action ainsi que les modifications qui peuvent être appliquées aux formes.
+\begin{figure}[h]
+    \centering
+    \includegraphics*[width=1\textwidth]{Images/actionlistener.png}
+\end{figure}
+
+\newpage
+"control\_state" pour créer les statuts des formes (est-ce qu'elles bougent, est-ce qu'elles sont redimensionnées,....)
+\begin{figure}[h]
+    \centering
+    \includegraphics*[width=1\textwidth]{Images/controlstate.png}
+\end{figure}
+
+
+"look\_feel" pour mettre en place un look\&feel
+\begin{figure}[h]
+    \centering
+    \includegraphics*[width=0.3\textwidth]{Images/lookandfeel.png}
+\end{figure}
+
+\newpage
+"shape\_view" pour donner une representation aux formes dans la version graphique (couleur, taille,...)
+\begin{figure}[h]
+    \centering
+    \includegraphics*[width=0.3\textwidth]{Images/shapeview.png}
+\end{figure}
+
+
+\newpage
+\section{Conclusion du projet}
+Ce projet est donc le resultat de plusieurs semaines de travail afin de mettre en pratique ce que nous avons appris durant ce semestre en java. 
+Nous avons pu montrer l'étendu de notre apprentissage dans plusieurs domaines comme l'utilisation du modele MVC, l'interface graphique avec swing ou encore l'utilisation de design patterns.
+Nous sommes fiers du travail acoompli et de la version finale de notre jeu de memorisation de formes.
+\end{document}

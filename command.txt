@@ -1,0 +1,26 @@
+#J'ai fait ca avec Maven 3.8.7
+
+#Compiler
+mvn compile / mvn clean compile
+
+#Executer un fichier 
+mvn exec:java -Dexec.mainClass="com.memoform.main.ViewMain"
+
+#Lancer les tests
+mvn test
+
+#Créer le jar
+mvn package
+
+#Executer le jar
+java -jar target/projet-memoform-1.0-SNAPSHOT.jar
+
+###############
+##### Git #####
+###############
+
+#Ajout de la branche local sur le depo distant
+git push --set-upstream origin <nom_de_branche>
+
+#Mettre à jour la branche à partir du master
+git pull --rebase origin master

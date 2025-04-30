@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="MemoForm" default="dist" basedir=".">
+
+    <!-- Définition des répertoires -->
+    <property name="src.dir"     value="src"/>
+    <property name="build.dir"   value="build"/>
+    <property name="doc.dir"     value="doc"/>
+    <property name="dist.dir"    value="dist"/>
+    <property name="main.class"  value="com.memoform.main.GameMain"/>
+
+    <!-- Nettoyage du projet -->
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+        <delete dir="${doc.dir}"/>
+        <delete file="${dist.dir}/MemoForm.jar"/>
+    </target>
+
+    <!-- Compilation -->
+    <path id="project.classpath">
+        <fileset dir="lib">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+
+    <target name="compile">
+        <mkdir dir="${build.dir}"/>
+        <javac srcdir="${src.dir}" destdir="${build.dir}" includeantruntime="false">
+            <classpath refid="project.classpath"/>
+        </javac>
+    </target>
+
+    <!-- Génération de la Javadoc -->
+    <target name="javadoc">
+        <mkdir dir="${doc.dir}"/>
+        <javadoc sourcepath="${src.dir}/main/java"
+                destdir="${doc.dir}"
+                author="true"
+                version="true"
+                use="true"
+                windowtitle="Documentation de MemoForm">
+            <classpath refid="project.classpath"/>
+        </javadoc>
+    </target>
+
+    <!-- Création du fichier JAR -->
+    <target name="jar" depends="compile">
+        <mkdir dir="${dist.dir}"/>
+        <jar destfile="${dist.dir}/MemoForm.jar" basedir="${build.dir}">
+            <manifest>
+                <attribute name="Main-Class" value="${main.class}"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <!-- Exécution de l'archive JAR avec changement de répertoire -->
+    <target name="run" depends="dist">
+        <!-- Exécution de la commande dans le répertoire dist -->
+        <exec executable="java" dir="${dist.dir}">
+            <arg value="-jar"/>
+            <arg value="MemoForm.jar"/>
+        </exec>
+    </target>
+
+    <!-- Construction complète -->
+    <target name="dist" depends="clean, compile, jar"/>
+
+</project>
