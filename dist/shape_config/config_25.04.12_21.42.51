@@ -1,0 +1,3 @@
+MFPolygon(500,274)[nbSides=5, sideLength=183]
+Rectangle(91,251)[width=50, height=30]
+MFPolygon(219,542)[nbSides=8, sideLength=50]
