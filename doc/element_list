@@ -1,0 +1,17 @@
+com.memoform.game
+com.memoform.main
+com.memoform.model
+com.memoform.model.command
+com.memoform.model.container
+com.memoform.model.observer_pattern
+com.memoform.model.observer_pattern.container
+com.memoform.model.shape
+com.memoform.model.strategy
+com.memoform.model.utils
+com.memoform.view
+com.memoform.view.action_listener.handler
+com.memoform.view.action_listener.state
+com.memoform.view.control_state
+com.memoform.view.look_feek
+com.memoform.view.shape_view
+com.memoform.view.shape_view.cast
